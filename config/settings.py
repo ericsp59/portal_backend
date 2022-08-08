@@ -37,11 +37,17 @@ DEBUG = True
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1',]
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PARSER_CLASSES': (
+#         'rest_framework.parsers.FileUploadParser'
+#     )
+# }
 
 # Application definition
 
 INSTALLED_APPS = [
     'portal_app.apps.PortalAppConfig',
+    'portal_front.apps.PortalFrontConfig',
     'portal_logs.apps.PortalLogsConfig',
     'crm.apps.CrmConfig',
     'rest_framework',

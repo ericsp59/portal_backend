@@ -23,6 +23,7 @@ from crm import views
 from portal_app.views import portal_app
 
 from portal_logs.views import PortalLogsApiView
+from portal_front.views import  PortalFrontApiView
 
 
 urlpatterns = [
@@ -31,6 +32,7 @@ urlpatterns = [
     path('form_response/', views.form_response, name='form_response'),
     path('portal/', portal_app, name='portal_app'),
     path('api/v1/log_list/', PortalLogsApiView.as_view()),
+    path('api/v1/add_playbook/', PortalFrontApiView.as_view()),
 
 ]
 
