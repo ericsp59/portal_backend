@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'portal_app.apps.PortalAppConfig',
     'portal_logs.apps.PortalLogsConfig',
     'crm.apps.CrmConfig',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

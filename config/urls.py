@@ -22,12 +22,15 @@ from django.conf import settings
 from crm import views
 from portal_app.views import portal_app
 
+from portal_logs.views import PortalLogsApiView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.first_page),
     path('form_response/', views.form_response, name='form_response'),
     path('portal/', portal_app, name='portal_app'),
+    path('api/v1/log_list/', PortalLogsApiView.as_view()),
 
 ]
 
