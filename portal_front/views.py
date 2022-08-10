@@ -1,9 +1,8 @@
-from django.shortcuts import render
-import os
 import subprocess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
+from .models import PortalFrontSettings
 
 
 # Create your views here.
@@ -15,15 +14,16 @@ def upload_func(name,file):
 class PortalFrontApiView(APIView):
     parser_classes = [FileUploadParser]
     def post(self, request):
-        file_obj = request.data['file']
+        settings = PortalFrontSettings.objects.get(pk=1)
+        print(settings.semaphore_srv_address)
+
         name = request.data['file'].name
-        # print(name)
-        # f = file_obj.read().decode('utf-8')
+
         file = request.FILES.get('file')
         upload_func(name, file)
-        list_files = subprocess.run(["D:/DISTR/utils/pscp/pscp.exe -i id_rsa", name, "root@172.16.16.21:/root/semaphore-operator/playbooks"], shell=True)
-        list_files = subprocess.run(["ssh","root@172.16.16.21","-i id_rsa", "bash syncgit.sh"], shell=True)
-        print("The exit code was: %d" % list_files.returncode)
+        command = subprocess.run([f'{settings.copy_files_program} -i {settings.semaphore_srv_priv_key_file}', name, f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}:/{settings.semaphore_srv_user}/{settings.semaphore_srv_operator_dir}/playbooks'], shell=True)
+        command = subprocess.run(["ssh",f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}',f'-i {settings.semaphore_srv_priv_key_file}', "bash syncgit.sh"], shell=True)
+        print("The exit code was: %d" % command.returncode)
         return Response({'post': 'ok', 'name': name})
 
         
