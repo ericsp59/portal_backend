@@ -1,4 +1,6 @@
 from django.shortcuts import render
+import os
+import subprocess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
@@ -15,11 +17,14 @@ class PortalFrontApiView(APIView):
     def post(self, request):
         file_obj = request.data['file']
         name = request.data['file'].name
-        print(name)
+        # print(name)
         # f = file_obj.read().decode('utf-8')
         file = request.FILES.get('file')
         upload_func(name, file)
-        return Response({'post': 'ok'})
+        list_files = subprocess.run(["D:/DISTR/utils/pscp/pscp.exe -i id_rsa", name, "root@172.16.16.21:/root/semaphore-operator/playbooks"], shell=True)
+        list_files = subprocess.run(["ssh","root@172.16.16.21","-i id_rsa", "bash syncgit.sh"], shell=True)
+        print("The exit code was: %d" % list_files.returncode)
+        return Response({'post': 'ok', 'name': name})
 
         
 

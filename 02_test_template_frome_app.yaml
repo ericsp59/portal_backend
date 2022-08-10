@@ -1,0 +1,4 @@
+- hosts: all
+  tasks:
+### For windows hosts2
+  - name: test yaml file
