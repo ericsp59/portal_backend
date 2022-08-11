@@ -22,7 +22,9 @@ class PortalFrontApiView(APIView):
         file = request.FILES.get('file')
         upload_func(name, file)
         # D:/DISTR/utils/pscp/pscp.exe
+        # command = subprocess.run([f'{settings.copy_files_program}', f'/{name}', f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}:/{settings.semaphore_srv_user}/{settings.semaphore_srv_operator_dir}/playbooks'])
         command = subprocess.run([f'{settings.copy_files_program} -i {settings.semaphore_srv_priv_key_file}', name, f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}:/{settings.semaphore_srv_user}/{settings.semaphore_srv_operator_dir}/playbooks'], shell=True)
+        # command = subprocess.run(["ssh",f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}',f'-i {settings.semaphore_srv_priv_key_file}', "bash syncgit.sh"])
         command = subprocess.run(["ssh",f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}',f'-i {settings.semaphore_srv_priv_key_file}', "bash syncgit.sh"], shell=True)
         print("The exit code was: %d" % command.returncode)
         return Response({'post': 'ok', 'name': name})
