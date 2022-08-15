@@ -2,7 +2,12 @@ import subprocess
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
+from rest_framework.decorators import api_view
 from .models import PortalFrontSettings
+#from django.http import JsonResponse
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 # Create your views here.
@@ -28,13 +33,26 @@ class PortalFrontApiView(APIView):
         command = subprocess.run(["ssh",f'{settings.semaphore_srv_user}@{settings.semaphore_srv_address}',f'-i {settings.semaphore_srv_priv_key_file}', "bash syncgit.sh"], shell=True)
         print("The exit code was: %d" % command.returncode)
         return Response({'post': 'ok', 'name': name})
+     
 
-        
+    @api_view(['GET'])
+    def getRoutes(request):
+        routes = [
+            '/api/token',
+            '/api/token/refresh',
+        ]
+        return Response(routes)
 
-    # def put(self, request):
-    #     file_obj = request.data['file']
-    #     print(file_obj.readable())
-    #     # ...
-    #     # do some stuff with uploaded file
-    #     # ...
-    #     return Response(status=204)    
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Add custom claims
+        token['username'] = user.username
+
+        # ...
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer        

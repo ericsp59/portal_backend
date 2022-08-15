@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from django.conf.urls.static import static
 from django.conf import settings
@@ -33,6 +33,7 @@ urlpatterns = [
     path('portal/', portal_app, name='portal_app'),
     path('api/v1/log_list/', PortalLogsApiView.as_view()),
     path('api/v1/add_playbook/', PortalFrontApiView.as_view()),
+    path('api/v1/', include('portal_front.urls'))
 
 ]
 
